@@ -1,4 +1,5 @@
 import User from "../models/user.model.js"
+import cloudinary from "../lib/cloudinary.js";
 
 
 export const getSuggestedConnections = async (req, res) => {
@@ -35,7 +36,7 @@ export const getPublicProfile = async (req, res) => {
 export const updateProfile = async (req, res) => {
     try {
         
-        const allowedFields = ["name", "profileImage", "bio"];
+        const allowedFields = ["name", "username", "profileImage", "bio"];
         const updatedFields = {};
 
         for(const field of allowedFields){
@@ -44,7 +45,19 @@ export const updateProfile = async (req, res) => {
             }
         }
 
-        // todo: check profile image => upload to cloudinary
+        if (updatedFields.username) {
+            const existingUser = await User.findOne({ username: updatedFields.username });
+
+            // if username exist and existing user != current user
+            if (existingUser && existingUser._id.toString() !== req.user._id.toString()) { 
+                return res.status(400).json({ msg: "Username already taken" });
+            }
+        }
+
+        if(req.body.profileImage){
+            const result = await cloudinary.uploader.upload(req.body.profileImage);
+            updatedFields.profileImage = result.secure_url;
+        }
 
         const user = await User.findByIdAndUpdate(req.user._id, updatedFields, {new: true}).select("-password");
         res.json(user);
