@@ -48,7 +48,7 @@ export const signup = async (req, res) => {
             secure: process.env.NODE_ENV === "production" //prevents man-in-the-middle attack
         })
 
-        res.status(201).json({msg: "Signup successful"});
+        res.status(201).json({msg: "Signup successful", user: newUser});
 
         //todo: send welcome email
 
@@ -84,7 +84,7 @@ export const login = async (req, res) => {
             secure: process.env.NODE_ENV === "production" //prevents man-in-the-middle attack
         })
 
-        res.status(200).json({msg: "Login successful"});
+        res.status(200).json({msg: "Login successful", user: user});
     } catch (error) {
         console.error("error in login controller: ", error.msg);
         res.status(500).json({msg: "Internal server error"});
