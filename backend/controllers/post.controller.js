@@ -128,3 +128,172 @@ export const deletePost = async (req, res) => {
         
     }
 }
+
+const toggleVote = async (req, res, type) => {
+    try {
+        const userId = req.user._id;
+        const postId = req.params.id;
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ msg: "Post not found" });
+
+        const isUpvoted = post.upVotes.includes(userId);
+        const isDownvoted = post.downVotes.includes(userId);
+
+        // toggle upvote and able to stay neutral
+        if (type === "upvote") {
+            if (!isUpvoted && isDownvoted) {
+                post.downVotes = post.downVotes.filter(id => id.toString() !== userId.toString());
+                post.upVotes.push(userId);
+            } else if (!isUpvoted) {
+                post.upVotes.push(userId);
+            } else {
+                post.upVotes = post.upVotes.filter(id => id.toString() !== userId.toString());
+            }
+        
+        // toggle downvote and able to stay neutral
+        } else if (type === "downvote") {
+            if (!isDownvoted && isUpvoted) {
+                post.upVotes = post.upVotes.filter(id => id.toString() !== userId.toString());
+                post.downVotes.push(userId);
+            } else if (!isDownvoted) {
+                post.downVotes.push(userId);
+            } else {
+                post.downVotes = post.downVotes.filter(id => id.toString() !== userId.toString());
+            }
+        }
+
+        await post.save();
+
+        // Create notification if the user is not the post owner (no notif if user is neutral)
+        if ((type === "upvote" && !isUpvoted) || (type === "downvote" && !isDownvoted)) {
+            if (post.author.toString() !== userId.toString()) {
+                const newNotification = new Notification({
+                    receiver: post.author,
+                    type,
+                    sender: userId,
+                    relatedPost: postId
+                });
+                await newNotification.save();
+            }
+        }
+
+        res.status(200).json(post);
+    } catch (error) {
+        console.error(`Error in ${type} post controller: `, error.message);
+        res.status(500).json({ msg: "Internal server error" });
+    }
+};
+
+export const upvotePost = (req, res) => toggleVote(req, res, "upvote");
+export const downvotePost = (req, res) => toggleVote(req, res, "downvote");
+
+
+//========== let this be backup for upvotePost and downvotePost in case the top code doesnt work ================\\
+// export const upvotePost = async (req, res) => {
+//     try {
+        
+//         const userid = req.user._id;
+//         const postid = req.params.id;
+//         const post = await Post.findById(postid);
+
+//         // if the post is not yet upvoted and is downvoted
+//         if(!(post.upVotes.includes(userid)) && (post.downVotes.includes(userid))){
+//             // upvote the post
+//             post.upVotes.push(userid);
+//             // remove downvote from the post
+//             post.downVotes = post.downVotes.filter(id => id.toString() !== userid.toString());
+
+//             // create notification if the post author is not the user who upvoted
+//             if (post.author.toString() !== userid.toString()) {
+//                 const newNotification = new Notification({
+//                     receiver: post.author,
+//                     type: "upvote",
+//                     sender: userid,
+//                     relatedPost: postid
+//                 })
+
+//                 await newNotification.save();
+//             }
+
+//         // if the post is not yet upvoted and is not downvoted    
+//         }else if(!(post.downVotes.includes(userid)) && !(post.upVotes.includes(userid))){
+//             // upvote the post
+//             post.upVotes.push(userid);
+
+//             // create notification if the post author is not the user who upvoted
+//             if (post.author.toString() !== userid.toString()) {
+//                 const newNotification = new Notification({
+//                     receiver: post.author,
+//                     type: "upvote",
+//                     sender: userid,
+//                     relatedPost: postid
+//                 })
+
+//                 await newNotification.save();
+
+//             }
+
+//         }else{
+//             // un upvote the post
+//             post.upVotes = post.upVotes.filter(id => id.toString() !== userid.toString());
+//         }
+
+//     } catch (error) {
+//         console.error("error in upvote post controller: ", error.msg);
+//         res.status(500).json({ msg: "Internal server error" });
+//     }
+// }
+// export const downvotePost = async (req, res) => {
+//     try {
+        
+//         const userid = req.user._id;
+//         const postid = req.params.id;
+//         const post = await Post.findById(postid);
+
+//         // if the post is not yet downvoted and is upvoted
+//         if(!(post.downVotes.includes(userid)) && (post.upVotes.includes(userid))){
+//             // downvote the post
+//             post.downVotes.push(userid);
+//             // remove upvote from the post
+//             post.upVotes = post.upVotes.filter(id => id.toString() !== userid.toString());
+
+//             // create notification if the post author is not the user who downvoted
+//             if (post.author.toString() !== userid.toString()) {
+//                 const newNotification = new Notification({
+//                     receiver: post.author,
+//                     type: "downvote",
+//                     sender: userid,
+//                     relatedPost: postid
+//                 })
+
+//                 await newNotification.save();
+//             }
+
+//         // if the post is not yet downvoted and is not upvoted    
+//         }else if(!(post.upVotes.includes(userid)) && !(post.downVotes.includes(userid))){
+//             // downvote the post
+//             post.downVotes.push(userid);
+
+//             // create notification if the post author is not the user who downvoted
+//             if (post.author.toString() !== userid.toString()) {
+//                 const newNotification = new Notification({
+//                     receiver: post.author,
+//                     type: "downvote",
+//                     sender: userid,
+//                     relatedPost: postid
+//                 })
+
+//                 await newNotification.save();
+
+//             }
+
+//         }else{
+//             // un downvote the post
+//             post.downVotes = post.downVotes.filter(id => id.toString() !== userid.toString());
+//         }
+
+//     } catch (error) {
+//         console.error("error in upvote post controller: ", error.msg);
+//         res.status(500).json({ msg: "Internal server error" });
+//     }
+// }
