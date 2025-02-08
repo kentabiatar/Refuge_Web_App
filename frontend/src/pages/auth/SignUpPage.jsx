@@ -13,7 +13,7 @@ function SignUpPage() {
         </p>
       </div>
 
-      {/* Sign-Up Card (Fixed Width Like Before) */}
+      {/*Card*/}
       <div className="card border-secondary border-[3px] text-neutral-content w-9/12 sm:w-96 min-w-[280px]">
         <div className="card-body items-center text-center gap-4">
           
