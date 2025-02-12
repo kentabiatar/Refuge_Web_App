@@ -1,15 +1,19 @@
 import React from 'react'
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMutation } from '@tanstack/react-query';
 import { HiOutlineUser, HiOutlineUsers, HiOutlineBell } from "react-icons/hi";
+import { Link } from "react-router-dom";
+import { toast } from "react-hot-toast";
+import { axiosClient } from '../../lib/axios.js';
 
 function Navbar() {
 
   const {data: authUser} = useQuery({queryKey: ['authUser']})
+  const queryClient = useQueryClient()
 
   const {data: notifications} = useQuery({
     queryKey: ['notifications'],
-    queryFn: async() => axiosClient.get('/notification'),
+    queryFn: async() => axiosClient.get('/notifications'),
     enabled: !!authUser
   })
   
@@ -21,12 +25,20 @@ function Navbar() {
 
   const {mutate: logout} = useMutation({
     mutationKey: ['logout'],
-    mutationFn: async() => axiosClient.post('/auth/logout')
+    mutationFn: async() => axiosClient.post('/auth/logout'),
+    onSuccess: () => {
+      toast.success("logout successfully")
+      queryClient.invalidateQueries({queryKey: ['authUser']})
+    },
+    onError: (error) => {
+      console.log("logout err: ", error)
+      toast.error(error.response.data.msg || "something went wrong")
+    },
   })
 
-  const unseenNotifCount = notifications?.filter(notification => !notification.seen).length
+  const unseenNotifCount = notifications?.data.filter(notification => !notification.seen).length
   // const unseenNotifCount = 2
-  const unseenConnectionReqCount = connectionReq?.filter(connection => !connection.status === "pending").length
+  const unseenConnectionReqCount = connectionReq?.data.filter(connection => connection.status === "pending").length
 
   return (
     <div className="navbar bg-base-100 border-b-[3px] border-secondary">
@@ -56,40 +68,49 @@ function Navbar() {
         </div>
         <a className="btn btn-ghost text-3xl text-secondary font-playball">Refuge</a>
       </div>
-      <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1 flex gap-10">
-          <div to={"/"} className='flex flex-col justify-center items-center relative'>
-            <div className="relative">
-              <HiOutlineBell className='text-xl'/>
-              {unseenNotifCount > 0 && (
-                <span className='absolute -top-1 -right-1 bg-primary text-stone-950 text-xs font-bold size-3 md:size-4 flex justify-center items-center rounded-full'>
-                  {unseenNotifCount}
-                </span>
-              )}
+      {authUser && (
+        <div className="navbar-center lg:flex">
+          <ul className="menu menu-horizontal px-1 flex gap-10">
+            <div to={"/"} className='flex flex-col justify-center items-center relative'>
+              <div className="relative">
+                <HiOutlineBell className='text-xl'/>
+                {unseenNotifCount > 0 && (
+                  <span className='absolute -top-1 -right-1 bg-primary text-stone-950 text-xs font-bold size-3 md:size-4 flex justify-center items-center rounded-full'>
+                    {unseenNotifCount}
+                  </span>
+                )}
+              </div>
+              <p className='text-xs text-neutral-600 font-bold scale-90'>Notif</p>
             </div>
-            <p className='text-xs text-neutral-600 font-bold scale-90'>Notif</p>
-          </div>
-          <div className='flex flex-col justify-center items-center relative'>
-            <div className="relative">
-              <HiOutlineUsers  className='text-xl'/>
-              {unseenNotifCount > 0 && (
-                <span className='absolute -top-1 -right-1 bg-primary text-stone-950 text-xs font-bold size-3 md:size-4 flex justify-center items-center rounded-full'>
-                  {unseenConnectionReqCount}
-                </span>
-              )}
+            <div className='flex flex-col justify-center items-center relative'>
+              <div className="relative">
+                <HiOutlineUsers  className='text-xl'/>
+                {unseenNotifCount > 0 && (
+                  <span className='absolute -top-1 -right-1 bg-primary text-stone-950 text-xs font-bold size-3 md:size-4 flex justify-center items-center rounded-full'>
+                    {unseenConnectionReqCount}
+                  </span>
+                )}
+              </div>
+              <p className='text-xs text-neutral-600 font-bold scale-90'>Friends</p>
             </div>
-            <p className='text-xs text-neutral-600 font-bold scale-90'>Friends</p>
-          </div>
-          <div className='flex flex-col justify-center items-center relative'>
-            <div className="relative">
-              <HiOutlineUser className='text-xl'/>
+            <div className='flex flex-col justify-center items-center relative'>
+              <div className="relative">
+                <HiOutlineUser className='text-xl'/>
+              </div>
+              <p className='text-xs text-neutral-600 font-bold scale-90'>Me</p>
             </div>
-            <p className='text-xs text-neutral-600 font-bold scale-90'>Me</p>
-          </div>
-        </ul>
-      </div>
+          </ul>
+        </div>
+      )} 
       <div className="navbar-end">
-        <button onClick={() => logout()} className="btn btn-ghost text-xs">Logout</button>
+        {authUser ?(
+          <button onClick={() => logout()} className="btn btn-ghost text-xs">Logout</button>
+        ): (
+          <>
+          <Link to="/login" className="btn btn-ghost text-xs">Login</Link>
+          <Link to="/signup" className="btn btn-ghost text-xs">Sign Up</Link>
+          </>
+        )}
       </div>
     </div>
   )

@@ -2,11 +2,14 @@ import React, { useState } from 'react'
 import { toast } from 'react-hot-toast'
 import { useMutation } from '@tanstack/react-query'
 import { axiosClient } from '../../lib/axios.js'
+import { useQueryClient } from '@tanstack/react-query'
 
 function LoginForm() {
 
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    const queryClient = useQueryClient()
 
     const {mutate: loginMutation, isLoading} = useMutation({
         mutationFn: async (data) => {
@@ -14,7 +17,8 @@ function LoginForm() {
             return res.data
         },
         onSuccess: () => {
-            toast.success("login successfully")
+            toast.success("login successfully"),
+            queryClient.invalidateQueries({queryKey: ['authUser']})
         },
         onError: (error) => {
             toast.error(error.response.data.msg || "something went wrong")

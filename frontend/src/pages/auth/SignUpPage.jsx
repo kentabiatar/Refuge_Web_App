@@ -1,5 +1,6 @@
-import React from 'react'
-import SignUpForm from '../../components/auth/SignUpForm'
+import React from 'react';
+import SignUpForm from '../../components/auth/SignUpForm';
+import { Link } from 'react-router-dom';
 
 function SignUpPage() {
   return (
@@ -24,7 +25,7 @@ function SignUpPage() {
           <div className="flex items-center w-full">
             <div className="flex-grow h-[2px] bg-secondary"></div>
             <span className="px-2 text-xs sm:text-sm text-secondary font-playfair">
-              Have an account? <a href="/login" className="font-bold">Login</a>
+              Have an account? <Link to="/login" className="font-bold">Login</Link>
             </span>
             <div className="flex-grow h-[2px] bg-secondary"></div>
           </div>

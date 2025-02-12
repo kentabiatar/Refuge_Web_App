@@ -18,7 +18,7 @@ function App() {
         if(error.response && error.response.status === 401){
           return null
         }
-        toast.error(error.response.data.msg || "something went wrong")
+        // toast.error(error.response.data.msg || "something went wrong")
       }
     }
   })
