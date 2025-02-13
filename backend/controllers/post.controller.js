@@ -4,7 +4,7 @@ import Notification from "../models/notification.model.js";
 
 export const getFeedPosts = async (req, res) => {
     try {
-        const posts = await Post.find({ author: { $in: req.user.connections} })
+        const posts = await Post.find({ author: { $in: [...req.user.connections, req.user._id]}})
         .populate("author", "name username profileImage")
         .populate("comments.author", "name username profileImage")
         .sort({ createdAt: -1 });
@@ -77,6 +77,7 @@ export const createComment = async (req, res) => {
 export const createPost = async (req, res) => {
     try {
         const {content, image} = req.body;
+        let newPost;
 
         if(image){
             const imageResult = await cloudinary.uploader.upload(image);

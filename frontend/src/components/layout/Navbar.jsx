@@ -69,9 +69,9 @@ function Navbar() {
         <a className="btn btn-ghost text-3xl text-secondary font-playball">Refuge</a>
       </div>
       {authUser && (
-        <div className="navbar-center lg:flex">
+        <div className="hidden navbar-center lg:flex font-playfair text-neutral-600">
           <ul className="menu menu-horizontal px-1 flex gap-10">
-            <div to={"/"} className='flex flex-col justify-center items-center relative'>
+            <Link to={"/"} className='flex flex-col justify-center items-center relative'>
               <div className="relative">
                 <HiOutlineBell className='text-xl'/>
                 {unseenNotifCount > 0 && (
@@ -80,9 +80,9 @@ function Navbar() {
                   </span>
                 )}
               </div>
-              <p className='text-xs text-neutral-600 font-bold scale-90'>Notif</p>
-            </div>
-            <div className='flex flex-col justify-center items-center relative'>
+              <p className='text-xs font-bold scale-90'>Notif</p>
+            </Link>
+            <Link className='flex flex-col justify-center items-center relative'>
               <div className="relative">
                 <HiOutlineUsers  className='text-xl'/>
                 {unseenNotifCount > 0 && (
@@ -91,20 +91,20 @@ function Navbar() {
                   </span>
                 )}
               </div>
-              <p className='text-xs text-neutral-600 font-bold scale-90'>Friends</p>
-            </div>
-            <div className='flex flex-col justify-center items-center relative'>
+              <p className='text-xs font-bold scale-90'>Community</p>
+            </Link>
+            <Link className='flex flex-col justify-center items-center relative'>
               <div className="relative">
                 <HiOutlineUser className='text-xl'/>
               </div>
-              <p className='text-xs text-neutral-600 font-bold scale-90'>Me</p>
-            </div>
+              <p className='text-xs font-bold scale-90'>Me</p>
+            </Link>
           </ul>
         </div>
       )} 
-      <div className="navbar-end">
+      <div className="navbar-end font-playfair text-neutral-600">
         {authUser ?(
-          <button onClick={() => logout()} className="btn btn-ghost text-xs">Logout</button>
+          <Link onClick={() => logout()} className="btn btn-ghost text-xs">Logout</Link>
         ): (
           <>
           <Link to="/login" className="btn btn-ghost text-xs">Login</Link>
