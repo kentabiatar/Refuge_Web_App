@@ -5,8 +5,8 @@ import Notification from "../models/notification.model.js";
 export const getFeedPosts = async (req, res) => {
     try {
         const posts = await Post.find({ author: { $in: [...req.user.connections, req.user._id]}})
-        .populate("author", "name username profileImage")
-        .populate("comments.author", "name username profileImage")
+        .populate("author", "name username profileImage bio")
+        .populate("comments.author", "name username profileImage bio")
         .sort({ createdAt: -1 });
 
         res.status(200).json(posts);
@@ -107,7 +107,7 @@ export const createPost = async (req, res) => {
 export const deletePost = async (req, res) => {
     try {
 
-        post = await Post.findById(req.params.id);
+        const post = await Post.findById(req.params.id);
         if(!post){
             return res.status(404).json({msg: "Post not found"});
         }
@@ -125,7 +125,7 @@ export const deletePost = async (req, res) => {
     } catch (error) {
 
         console.error("error in delete post controller: ", error.msg);
-        res.status(500).json({ msg: "Internal server error" });
+        res.status(500).json({ msg: "Internal server errerror" });
         
     }
 }

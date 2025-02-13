@@ -86,9 +86,9 @@ function PostCreation({user}) {
                     <input type='file' accept='image/*' className='hidden' onChange={handleImageChange} />
                 </label>
             </div>
-        <button className='btn-sm rounded-lg bg-secondary border-[3px] hover:bg-primary border-secondary hover:text-secondary text-primary transition-colors duration-200' onClick={handlePostCreation} disabled={isPending}>
-            {isPending ? <span className='loading loading-spinner'></span> : "Submit"} 
-        </button>    
+            <button className='btn-sm rounded-lg bg-secondary border-[3px] hover:bg-primary border-secondary hover:text-secondary text-primary transition-colors duration-200' onClick={handlePostCreation} disabled={isPending}>
+                {isPending ? <span className='loading loading-spinner'></span> : "Submit"} 
+            </button>    
         </div>
     </div>
   )
