@@ -2,13 +2,12 @@ import React, { useState } from 'react'
 import { useQueryClient, useQuery, useMutation } from '@tanstack/react-query'
 import { axiosClient } from '../lib/axios'
 import { toast } from 'react-hot-toast'
-import { HiOutlineTrash, HiOutlinePaperClip } from "react-icons/hi"
-import { BiUpvote, BiDownvote } from "react-icons/bi"
-import { GoCommentDiscussion, GoShareAndroid } from "react-icons/go"
-import { formatDistanceToNow } from 'date-fns'
+import { HiOutlineTrash, HiOutlinePaperClip } from "react-icons/hi";
+import { BiUpvote, BiDownvote } from "react-icons/bi";
+import { GoCommentDiscussion, GoShareAndroid } from "react-icons/go";
 import PostAction from './PostAction'
 
-function Post({ post }) {
+function TempPost({ post }) {
     const { data: authUser } = useQuery({ queryKey: ['authUser'] })
     const [showComments, setShowComments] = useState(false)
     const [newComment, setNewComment] = useState("")
@@ -140,10 +139,7 @@ function Post({ post }) {
                         <div className='flex gap-3'>
                             <img src={post.author.profileImage || "/defaultProfile.png"} alt={post.author.name} className='size-10 rounded-full' />
                             <div>
-                                <div className='flex items-center gap-3'>
-                                    <h3 className='font-bold'>{post.author.name}</h3>
-                                    <p className='text-xs'>{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true})}</p>
-                                </div>
+                                <h3 className='font-bold'>{post.author.name}</h3>
                                 <p className='text-xs'>{post.author.bio}</p>
                             </div>
                         </div>
@@ -175,13 +171,13 @@ function Post({ post }) {
             {showComments && (
                 <div>
                     {isLoadingComments ? (
-                        <p className='m-5'>Comments are loading...</p>
+                        <p>Comments are loading...</p>
                     ) : (
                         comments.length > 0 ? comments.map(comment => (
-                            <div key={comment._id} className='ml-7'>
-                                <Post post={comment} />
+                            <div key={comment._id} className='ml-14'>
+                                <TempPost post={comment} />
                             </div>
-                        )) : <p className='m-5'>No comments yet.</p>
+                        )) : <p>No comments yet.</p>
 
                     )}
 
@@ -217,4 +213,4 @@ function Post({ post }) {
     )
 }
 
-export default Post;
+export default TempPost;

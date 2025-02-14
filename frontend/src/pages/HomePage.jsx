@@ -5,10 +5,11 @@ import Sidebar from '../components/Sidebar'
 import PostCreation from '../components/PostCreation'
 import Post from '../components/Post'
 import { HiOutlineUser } from "react-icons/hi";
+import RecommendedUser from '../components/RecommendedUser'
 function HomePage() {
 
   const {data: authUser} = useQuery({queryKey: ['authUser']})
-  const {data: getRecomendedUsers} = useQuery({
+  const {data: getRecommendedUsers} = useQuery({
     queryKey: ['getRecomendedUsers'],
     queryFn: async () => {
       const res = await axiosClient.get('/users/suggestions')
@@ -24,7 +25,7 @@ function HomePage() {
     }
   })
 
-  console.log("getRecomendedUsers: ", getRecomendedUsers)
+  console.log("getRecomendedUsers: ", getRecommendedUsers)
   console.log("getPosts: ", getPosts)
 
   return (
@@ -35,7 +36,11 @@ function HomePage() {
       <div className='col-span-1 lg:col-span-2 order-first lg:order-none'>
         <PostCreation user={ authUser } />
 
-        {getPosts?.map(post => <Post key={post._id} post={post}/>)}
+        {getPosts?.map(post =>(
+          <div key={post._id} className='bg-base-100 rounded-lg shadow mb-4 border-b-[3px] border-r-[3px] border-secondary'>
+            <Post post={post}/>
+          </div> 
+        ))}
         {getPosts?.length === 0 && (
           <div className='bg-neutral-100 rounded-lg p-8 shadow text-center'>
             <div className='mb-6'>
@@ -46,6 +51,14 @@ function HomePage() {
           </div>
 
         )}
+      </div>
+      <div className='hidden lg:block lg:col-span-1'>
+        <div className='bg-base-100 border-b-[3px] border-r-[3px] border-secondary rounded-lg shadow p-4 space-y-4'>
+          <h2 className='text-neutral-600 font-playfair font-bold mb-6 '>People you may know</h2>
+          {getRecommendedUsers?.map((user) => (
+            <RecommendedUser key={user._id} user={ user } />
+          ))}
+        </div>
       </div>
 
     </div>

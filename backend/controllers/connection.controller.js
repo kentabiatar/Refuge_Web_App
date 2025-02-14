@@ -159,7 +159,7 @@ export const getConnectionStatus = async (req, res) => {
             return res.json({status: "connected"});
         }
 
-        const pendingRequests = await Connection.find({
+        const pendingRequests = await Connection.findOne({
             $or: [
                 { sender: userid, receiver: myid},
                 { sender: myid, receiver: userid}
@@ -176,9 +176,9 @@ export const getConnectionStatus = async (req, res) => {
         }
 
         // if no connection or pending request found
-        return res.json({status: "not connected"});
+        return res.json({status: "not_connected"});
     } catch (error) {
-        console.error("error in get connection status controller: ", error.msg);
+        console.error("error in get connection status controller: ", error.message);
         res.status(500).json({msg: "Internal server error"});
     }
 }

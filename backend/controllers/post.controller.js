@@ -4,29 +4,34 @@ import Notification from "../models/notification.model.js";
 
 export const getFeedPosts = async (req, res) => {
     try {
-        const posts = await Post.find({ author: { $in: [...req.user.connections, req.user._id]}})
+        const posts = await Post.find({ 
+            author: { $in: [...req.user.connections, req.user._id] },
+            parent: null // 🔥 Exclude comments (only fetch main posts)
+        })
         .populate("author", "name username profileImage bio")
-        .populate("comments.author", "name username profileImage bio")
         .sort({ createdAt: -1 });
 
         res.status(200).json(posts);
     } catch (error) {
-        console.error("error in get feed posts controller: ", error.msg);
+        console.error("Error in getFeedPosts controller:", error);
         res.status(500).json({ msg: "Internal server error" });
     }
-}
+};
+
 
 export const getPostById = async (req, res) => {
     try {
         const post = await Post.findById(req.params.id)
-        .populate("author", "name username profileImage")
-        .populate("comments.author", "name username profileImage");
+        .populate("author", "name username profileImage bio");
 
         if(!post){
             return res.status(404).json({msg: "Post not found"});
         }
 
-        res.status(200).json(post);
+        const comment = await Post.find({parent: req.params.id})
+        .populate("author", "name username profileImage bio");
+
+        res.status(200).json({post, comment});
     } catch (error) {
         console.error("error in get post by id controller: ", error.msg);
         res.status(500).json({ msg: "Internal server error" });
@@ -36,9 +41,15 @@ export const getPostById = async (req, res) => {
 export const createComment = async (req, res) => {
     try {
         const { content, image } = req.body;
+        const {id: parentId} = req.params;
+
+        const parentPost = await Post.findById(parentId).populate("author", "name username profileImage bio");
+        if(!parentPost){
+            return res.status(404).json({msg: "Parent post not found"});
+        }
 
         // Prepare comment object
-        const commentData = { author: req.user._id, content };
+        const commentData = { author: req.user._id, content, parent: parentId };
 
         // Upload image if provided
         if (image) {
@@ -47,27 +58,19 @@ export const createComment = async (req, res) => {
         }
 
         // Update post with new comment
-        const post = await Post.findByIdAndUpdate(
-            req.params.id,
-            { $push: { comments: commentData } },
-            { new: true }
-        ).populate("author", "name username profileImage");
-
-        if (!post) {
-            return res.status(404).json({ msg: "Post not found" });
-        }
+        const comment = (await Post.create(commentData));
 
         // Create notification if the commenter is not the post owner
-        if (post.author.toString() !== req.user._id.toString()) {
+        if (parentPost.author._id.toString() !== req.user._id.toString()) {
             await new Notification({
-                receiver: post.author,
+                receiver: parentPost.author,
                 type: "comment",
                 sender: req.user._id,
                 relatedPost: req.params.id
             }).save();
         }
 
-        res.status(200).json(post);
+        res.status(200).json(comment);
     } catch (error) {
         console.error("Error in create comment controller:", error);
         res.status(500).json({ msg: "Internal server error" });
@@ -187,6 +190,20 @@ const toggleVote = async (req, res, type) => {
 
 export const upvotePost = (req, res) => toggleVote(req, res, "upvote");
 export const downvotePost = (req, res) => toggleVote(req, res, "downvote");
+
+export const getCommentsForPost = async (req, res) => {
+    try {
+        const comments = await Post.find({ parent: req.params.id })
+            .populate("author", "name username profileImage bio")
+            .sort({ createdAt: -1 }); // Sort by (upVotes - downVotes) in descending order
+
+        res.status(200).json(comments);
+    } catch (error) {
+        console.error("Error in getCommentsForPost:", error);
+        res.status(500).json({ msg: "Internal server error" });
+    }
+};
+
 
 
 //========== let this be backup for upvotePost and downvotePost in case the top code doesnt work ================\\
