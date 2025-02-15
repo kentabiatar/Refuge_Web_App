@@ -16,7 +16,7 @@ export const getUserNotifications = async (req, res) => {
 }
 
 export const markNotificationAsSeen = async (req, res) => {
-    notificationid = req.params.id;
+    const notificationid = req.params.id;
     try {
         const notification = await Notification.findByIdAndUpdate({
             _id: notificationid,

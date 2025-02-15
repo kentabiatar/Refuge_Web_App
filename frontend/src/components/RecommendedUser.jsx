@@ -24,7 +24,8 @@ function RecommendedUser({user}) {
     })
     
     const {mutate: acceptConnectionReq} = useMutation({
-        mutationFn: (requestid) => axiosClient.post(`/connections/accept/${requestid}`),
+		mutationKey: ['acceptConnectionReq'],
+        mutationFn: (requestid) => axiosClient.put(`/connections/accept/${requestid}`),
         onSuccess: () => {
             toast.success('connection accepted')
             queryClient.invalidateQueries({queryKey: ['connectionStatus', user._id]})
@@ -35,7 +36,8 @@ function RecommendedUser({user}) {
     })
     
     const {mutate: rejectConnectionReq} = useMutation({
-        mutationFn: (requestid) => axiosClient.post(`/connections/reject/${requestid}`),
+		mutationKey: ['rejectConnectionReq'],
+        mutationFn: (requestid) => axiosClient.put(`/connections/reject/${requestid}`),
         onSuccess: () => {
             toast.success('connection rejected')
             queryClient.invalidateQueries({queryKey: ['connectionStatus', user._id]})
@@ -66,19 +68,20 @@ function RecommendedUser({user}) {
 					</button>
 				);
 			case "received":
+				console.log("connectionStatus.data:", connectionStatus.data);
 				return (
-					<div className='flex gap-2 justify-center'>
+					<div className='flex gap-2 justify-center items-center'>
 						<button
-							onClick={() => acceptConnectionReq(connectionStatus.data.requestId)}
-							className={`rounded-full p-1 flex items-center justify-center bg-green-500 hover:bg-green-600 text-white`}
+							onClick={() => acceptConnectionReq(connectionStatus.data.requestid)}
+							className={`btn btn-xs p-1 flex flex-1 items-center justify-center bg-green-500 hover:bg-green-600 text-white`}
 						>
-							{/* <Check size={16} /> */}
+							Accept
 						</button>
 						<button
-							onClick={() => rejectConnectionReq(connectionStatus.data.requestId)}
-							className={`rounded-full p-1 flex items-center justify-center bg-red-500 hover:bg-red-600 text-white`}
+							onClick={() => rejectConnectionReq(connectionStatus.data.requestid)}
+							className={`btn btn-xs p-1 flex flex-1 items-center justify-center bg-red-500 hover:bg-red-600 text-white`}
 						>
-							{/* <X size={16} /> */}
+							Reject
 						</button>
 					</div>
 				);
@@ -116,11 +119,11 @@ function RecommendedUser({user}) {
 		<div className='flex items-center justify-between mb-4'>
 			<Link to={`/profile/${user.username}`} className='flex items-center flex-grow'>
 				<img
-					src={user.profilePicture || "/defaultProfile.png"}
+					src={user.profileImage || "/defaultProfile.png"}
 					alt={user.name}
 					className='size-7 rounded-full mr-3'
 				/>
-				<div>
+				<div className='text-neutral-600 font-playfair'>
 					<h3 className='font-semibold text-sm'>{user.name}</h3>
 					<p className='text-xs text-info'>{user.bio}</p>
 				</div>

@@ -24,9 +24,9 @@ function Post({ post }) {
         // enabled: showComments 
     });
 
-    const isOwner = post.author._id === authUser?._id
-    const isUpvoted = post.upVotes.includes(authUser?._id)
-    const isDownvoted = post.downVotes.includes(authUser?._id)
+    const isOwner = post?.author?._id === authUser?._id
+    const isUpvoted = post?.upVotes?.includes(authUser?._id)
+    const isDownvoted = post?.downVotes?.includes(authUser?._id)
     const queryClient = useQueryClient()
 
     const { mutate: deletePost, isPending: isDeleting } = useMutation({
@@ -148,8 +148,8 @@ function Post({ post }) {
                             </div>
                         </div>
                         {isOwner && (
-                            <button onClick={handleDeletePost} className='btn btn-ghost'>
-                                {isDeleting ? <span className='loading loading-spinner'></span> : <HiOutlineTrash className='size-5 text-secondary' />}
+                            <button onClick={handleDeletePost} className='btn btn-ghost text-secondary hover:text-neutral-300'>
+                                {isDeleting ? <span className='loading loading-spinner'></span> : <HiOutlineTrash className='size-5' />}
                             </button>
                         )}
                     </div>

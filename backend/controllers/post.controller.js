@@ -5,9 +5,9 @@ import Notification from "../models/notification.model.js";
 export const getFeedPosts = async (req, res) => {
     try {
         const posts = await Post.find({ 
-            author: { $in: [...req.user.connections, req.user._id] },
             parent: null // 🔥 Exclude comments (only fetch main posts)
         })
+        // author: { $in: [...req.user.connections, req.user._id] },
         .populate("author", "name username profileImage bio")
         .sort({ createdAt: -1 });
 

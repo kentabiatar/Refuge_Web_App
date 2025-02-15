@@ -31,6 +31,7 @@ export const sendConnectionReq = async (req, res) => {
         });
 
         await newRequest.save();
+
         res.status(200).json({msg: "Connection request sent successfully"});
     } catch (error) {
         console.error("error in send connection request controller: ", error.msg);
@@ -64,7 +65,7 @@ export const acceptConnectionReq = async (req, res) => {
         await User.findByIdAndUpdate(request.sender._id, { $addToSet: { connections: userid } });
         await User.findByIdAndUpdate(userid, { $addToSet: { connections: request.sender._id } });
 
-        
+        // Add to both users
         const notification = new Notification({
             receiver: request.sender._id,
             type: "connectionAccepted",
@@ -72,10 +73,12 @@ export const acceptConnectionReq = async (req, res) => {
         });
         
         await notification.save();
+        
+        await notification.save();
         res.status(200).json({msg: "Connection accepted successfully"});
         
     } catch (error) {
-        console.error("error in accept connection request controller: ", error.msg);
+        console.error("error in accept connection request controller: ", error.message);
         res.status(500).json({msg: "Internal server error"});
     }
 }
@@ -110,8 +113,8 @@ export const rejectConnectionReq = async (req, res) => {
 
 export const getConnectionReq = async (req, res) => {
     try {
-        const requests = await Connection.find({ receiver: req.user._id, status: "pending" })
-        .populate("sender", "name username profileImage connections")
+        const requests = await Connection.find({ receiver: req.user._id, status: {$in: ["pending", "received"]} })
+        .populate("sender", "name name bio username profileImage connections")
         .sort({ createdAt: -1 });
 
         res.status(200).json(requests);
@@ -123,7 +126,7 @@ export const getConnectionReq = async (req, res) => {
 
 export const getConnections = async (req, res) => {
     try {
-        userid = req.user._id;
+        const userid = req.user._id;
         const user = await User.findById(userid)
         .populate("connections", "name username profileImage connections");
 

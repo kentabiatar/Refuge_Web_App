@@ -61,17 +61,17 @@ function Navbar() {
           <ul
             tabIndex={0}
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-            <li><a>Notifications</a></li>
-            <li><a>Friends</a></li>
-            <li><a>Me</a></li>
+            <li><Link to={"/notifications"}>Notifications</Link></li>
+            <li><Link to={"/connections"}>Connections</Link></li>
+            <li><Link>Me</Link></li>
           </ul>
         </div>
-        <a className="btn btn-ghost text-3xl text-secondary font-playball">Refuge</a>
+        <Link to={"/"} className="btn btn-ghost text-3xl text-secondary font-playball">Refuge</Link>
       </div>
       {authUser && (
         <div className="hidden navbar-center lg:flex font-playfair text-neutral-600">
           <ul className="menu menu-horizontal px-1 flex gap-10">
-            <Link to={"/"} className='flex flex-col justify-center items-center relative'>
+            <Link to={"/notifications"} className='flex flex-col justify-center items-center relative'>
               <div className="relative">
                 <HiOutlineBell className='text-xl'/>
                 {unseenNotifCount > 0 && (
@@ -82,16 +82,16 @@ function Navbar() {
               </div>
               <p className='text-xs font-bold scale-90'>Notif</p>
             </Link>
-            <Link className='flex flex-col justify-center items-center relative'>
+            <Link to={"/connections"} className='flex flex-col justify-center items-center relative'>
               <div className="relative">
                 <HiOutlineUsers  className='text-xl'/>
-                {unseenNotifCount > 0 && (
+                {unseenConnectionReqCount > 0 && (
                   <span className='absolute -top-1 -right-1 bg-primary text-stone-950 text-xs font-bold size-3 md:size-4 flex justify-center items-center rounded-full'>
                     {unseenConnectionReqCount}
                   </span>
                 )}
               </div>
-              <p className='text-xs font-bold scale-90'>Community</p>
+              <p className='text-xs font-bold scale-90'>Connections</p>
             </Link>
             <Link className='flex flex-col justify-center items-center relative'>
               <div className="relative">

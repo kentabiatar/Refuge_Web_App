@@ -1,11 +1,14 @@
 import Layout from './components/layout/Layout.jsx'
 import { Routes, Route, Navigate } from 'react-router-dom'
-import HomePage from './pages/HomePage.jsx';
+import HomePage from './pages/HomePage.jsx'
 import LoginPage from './pages/auth/LoginPage.jsx'
 import SignUpPage from './pages/auth/SignUpPage.jsx'
+import NotificationPage from './pages/NotificationPage.jsx'
+import ConnectionPage from './pages/ConnectionPage.jsx'
+import PostPage from './pages/PostPage.jsx'
 import { Toaster } from 'react-hot-toast'
-import { useQuery } from '@tanstack/react-query';
-import { axiosClient } from './lib/axios.js';
+import { useQuery } from '@tanstack/react-query'
+import { axiosClient } from './lib/axios.js'
 function App() {
 
   const {data: authUser, isLoading} = useQuery({
@@ -33,6 +36,9 @@ function App() {
         <Route path="/" element={authUser ? <HomePage /> : <Navigate to={"/login"} />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}  />
+        <Route path="/notifications" element={authUser ? <NotificationPage /> : <Navigate to={"/login"} />}  />
+        <Route path="/connections" element={authUser ? <ConnectionPage /> : <Navigate to={"/login"} />}  />
+        <Route path="/post/:id" element={authUser ? <PostPage /> : <Navigate to={"/login"} />}  />
       </Routes>
       <Toaster />
     </Layout>
