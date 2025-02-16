@@ -6,9 +6,12 @@ import { HiOutlineTrash, HiOutlinePaperClip } from "react-icons/hi"
 import { BiUpvote, BiDownvote } from "react-icons/bi"
 import { GoCommentDiscussion, GoShareAndroid } from "react-icons/go"
 import { formatDistanceToNow } from 'date-fns'
+import { useParams } from 'react-router-dom'
 import PostAction from './PostAction'
 
 function Post({ post }) {
+    const { id } = useParams()
+    const { username } = useParams()
     const { data: authUser } = useQuery({ queryKey: ['authUser'] })
     const [showComments, setShowComments] = useState(false)
     const [newComment, setNewComment] = useState("")
@@ -28,6 +31,8 @@ function Post({ post }) {
     const isUpvoted = post?.upVotes?.includes(authUser?._id)
     const isDownvoted = post?.downVotes?.includes(authUser?._id)
     const queryClient = useQueryClient()
+    // console.log("post",post)
+    // console.log("isowner? ",isOwner)
 
     const { mutate: deletePost, isPending: isDeleting } = useMutation({
         mutationFn: async () => axiosClient.delete(`/posts/delete/${post._id}`),
@@ -44,17 +49,21 @@ function Post({ post }) {
         mutationFn: async () => axiosClient.post(`/posts/${post._id}/upvote`),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: post.parent ? ['getComments'] : ['getPosts'] })
+            queryClient.invalidateQueries({ queryKey: post.parent ? ['getComments'] : ['getPostById', id] })
+            queryClient.invalidateQueries({ queryKey: post.parent ? ['getComments'] : ['userProfile', username] })
             toast.success("Post upvoted successfully")
         },
         onError: (error) => {
             toast.error(error.response?.data?.msg || "Error upvoting post")
         }
     })
-
+    
     const { mutate: downvotePost, isPending: isDownvoting } = useMutation({
         mutationFn: async () => axiosClient.post(`/posts/${post._id}/downvote`),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: post.parent ? ['getComments'] : ['getPosts'] })
+            queryClient.invalidateQueries({ queryKey: post.parent ? ['getComments'] : ['getPostById', id] })
+            queryClient.invalidateQueries({ queryKey: post.parent ? ['getComments'] : ['userProfile', username] })
             toast.success("Post downvoted successfully")
         },
         onError: (error) => {

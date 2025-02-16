@@ -6,6 +6,7 @@ import SignUpPage from './pages/auth/SignUpPage.jsx'
 import NotificationPage from './pages/NotificationPage.jsx'
 import ConnectionPage from './pages/ConnectionPage.jsx'
 import PostPage from './pages/PostPage.jsx'
+import ProfilePage from './pages/ProfilePage.jsx'
 import { Toaster } from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
 import { axiosClient } from './lib/axios.js'
@@ -39,6 +40,7 @@ function App() {
         <Route path="/notifications" element={authUser ? <NotificationPage /> : <Navigate to={"/login"} />}  />
         <Route path="/connections" element={authUser ? <ConnectionPage /> : <Navigate to={"/login"} />}  />
         <Route path="/post/:id" element={authUser ? <PostPage /> : <Navigate to={"/login"} />}  />
+        <Route path="/profile/:username" element={authUser ? <ProfilePage /> : <Navigate to={"/login"} />}  />
       </Routes>
       <Toaster />
     </Layout>

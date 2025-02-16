@@ -12,7 +12,7 @@ function PostPage() {
     const { id } = useParams()
     const { data: authUser } = useQuery({queryKey: ['authUser']})
     const {data: getPostById, isLoading: postLoading} = useQuery({
-        queryKey: ['getPostById'],
+        queryKey: ['getPostById', id],
         queryFn: async () => axiosClient.get(`/posts/${id}`)
     })
     

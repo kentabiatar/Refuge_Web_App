@@ -29,6 +29,7 @@ function ConnectionPage() {
             toast.success('connection accepted')
             queryClient.invalidateQueries({queryKey: ['getConnectionsReq']})
             queryClient.invalidateQueries({queryKey: ['getConnections']})
+            queryClient.invalidateQueries({queryKey: ['connectionReq']})
         },
         onError: (error) => {
             toast.error(error.response?.data?.error || 'Error Accepting Connection Request')
@@ -41,6 +42,7 @@ function ConnectionPage() {
         onSuccess: () => {
             toast.success('connection rejected')
             queryClient.invalidateQueries({queryKey: ['getConnectionsReq']})
+            queryClient.invalidateQueries({queryKey: ['connectionReq']})
         },
         onError: (error) => {
             toast.error(error.response?.data?.error || 'Error rejecting Connection Request')

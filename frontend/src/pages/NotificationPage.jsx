@@ -21,18 +21,20 @@ function NotificationPage() {
         mutationFn: (notifid) => axiosClient.put(`/notifications/${notifid}/seen`),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['getNotifications']})
+            queryClient.invalidateQueries({queryKey: ['notifications']})
             toast.success("Notification Marked as Read")
         },
         onError: (error) => {
             toast.error(error.response?.data?.msg || "Error Marking Notification as Read")
         }
     })
-
+    
     const {mutate: deleteNotification, isLoading: isDeleting} = useMutation({
         mutationKey: ['deleteNotif'],
         mutationFn: (notifid) => axiosClient.delete(`/notifications/${notifid}`),
         onSuccess: () => {
             queryClient.invalidateQueries({queryKey: ['getNotifications']})
+            queryClient.invalidateQueries({queryKey: ['notifications']})
             toast.success('notification deleted successfully')
         },
         onError: (error) => {

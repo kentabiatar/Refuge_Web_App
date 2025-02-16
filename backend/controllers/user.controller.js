@@ -22,7 +22,13 @@ export const getSuggestedConnections = async (req, res) => {
 
 export const getPublicProfile = async (req, res) => {
     try {
-        const user = await User.findOne({username: req.params.username}).select("-password");
+        const user = await User.findOne({ username: req.params.username })
+        .select("-password")
+        .populate({
+            path: "posts",
+            populate: { path: "author" }
+        });
+        
         if(!user){
             return res.status(404).json({msg: "User not found"});
         }
