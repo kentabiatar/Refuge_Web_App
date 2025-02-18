@@ -76,7 +76,7 @@ function ConnectionPage() {
       <div className='col-span-1 lg:col-span-3 order-first lg:order-none space-y-3'>
 
         {/* connection request     */}
-        <div className='p-10 bg-base-100 rounded-lg shadow border-b-[3px] border-r-[3px] border-secondary'>
+        <div className='p-10 bg-base-100 rounded-lg shadow border-b-[3px] border-r-[3px] border-secondary min-w-80'>
             {getConnectionsReq?.data?.length > 0 ? (
             <>
                 <h2 className='text-lg font-bold mb-4 text-gray-800'>Connection Requests</h2>
@@ -120,7 +120,7 @@ function ConnectionPage() {
         </div>
 
         {/* connections */}
-        <div className='p-10 bg-base-100 rounded-lg shadow border-b-[3px] border-r-[3px] border-secondary space-y-1'>
+        <div className='p-10 bg-base-100 rounded-lg shadow border-b-[3px] border-r-[3px] border-secondary space-y-1 min-w-80'>
             {getConnections?.data?.length > 0 ? (
                 <>
                  <h2 className='text-lg font-bold mb-4 text-gray-800'>Your Connections</h2>

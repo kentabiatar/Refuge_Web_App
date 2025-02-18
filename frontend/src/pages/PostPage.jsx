@@ -25,7 +25,7 @@ function PostPage() {
         <Sidebar user={ authUser } />
       </div>
       <div className='col-span-1 lg:col-span-3 order-first lg:order-none'>
-      <div className='bg-base-100 rounded-lg shadow mb-4 border-b-[3px] border-r-[3px] border-secondary'>
+      <div className='bg-base-100 rounded-lg shadow mb-4 border-b-[3px] border-r-[3px] border-secondary min-w-80'>
             <Post post={getPostById.data.post}/>
         </div>
       </div>

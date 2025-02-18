@@ -9,12 +9,12 @@ function Sidebar({ user }) {
             <div
                 className='h-16 rounded-t-lg bg-cover bg-center'
                 style={{
-                    backgroundImage: `url("${user.profileImage || "/banner.jpg"}")`,
+                    backgroundImage: `url("/banner.jpg")`,
                 }}
             />
             <Link to={`/profile/${user.username}`}>
                 <img
-                    src={user.profilePicture || "/defaultProfile.png"}
+                    src={user.profileImage || "/defaultProfile.png"}
                     alt={user.name}
                     className='w-20 h-20 rounded-full mx-auto mt-[-40px]'
                 />

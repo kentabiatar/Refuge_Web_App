@@ -4,9 +4,10 @@ import { axiosClient } from '../lib/axios'
 import { toast } from 'react-hot-toast'
 import { HiOutlineTrash, HiOutlinePaperClip } from "react-icons/hi"
 import { BiUpvote, BiDownvote } from "react-icons/bi"
-import { GoCommentDiscussion, GoShareAndroid } from "react-icons/go"
+import { GoCommentDiscussion } from "react-icons/go"
+import { CiShare1 } from "react-icons/ci"
 import { formatDistanceToNow } from 'date-fns'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import PostAction from './PostAction'
 
 function Post({ post }) {
@@ -146,7 +147,7 @@ function Post({ post }) {
                 </div>
                 <div className='gap-1 grid w-full'>
                     <div className='flex justify-between items-center text-neutral-600 font-playfair'>
-                        <div className='flex gap-3'>
+                        <Link to={`/profile/${post.author.username}`} className='flex gap-3'>
                             <img src={post.author.profileImage || "/defaultProfile.png"} alt={post.author.name} className='size-10 rounded-full' />
                             <div>
                                 <div className='flex items-center gap-3'>
@@ -155,7 +156,7 @@ function Post({ post }) {
                                 </div>
                                 <p className='text-xs'>{post.author.bio}</p>
                             </div>
-                        </div>
+                        </Link>
                         {isOwner && (
                             <button onClick={handleDeletePost} className='btn btn-ghost text-secondary hover:text-neutral-300'>
                                 {isDeleting ? <span className='loading loading-spinner'></span> : <HiOutlineTrash className='size-5' />}
@@ -172,10 +173,10 @@ function Post({ post }) {
                             text={`Comments (${comments.length})`} 
                             onClick={() => setShowComments(!showComments)}
                         />
-                        <PostAction 
-                            icon={<GoShareAndroid size={15} className="text-neutral-600" />} 
-                            text={"Share"} 
-                        />
+                        <Link to={`/post/${post._id}`} className="flex items-center gap-2">
+                            <CiShare1 size={15} className="text-neutral-600" />
+                            <span className="text-sm">View Full Post</span>
+                        </Link>
                     </div>
                 </div>
             </div>

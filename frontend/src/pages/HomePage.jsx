@@ -37,7 +37,7 @@ function HomePage() {
         <PostCreation user={ authUser } />
 
         {getPosts?.map(post =>(
-          <div key={post._id} className='bg-base-100 rounded-lg shadow mb-4 border-b-[3px] border-r-[3px] border-secondary'>
+          <div key={post._id} className='bg-base-100 rounded-lg shadow mb-4 border-b-[3px] border-r-[3px] border-secondary min-w-80'>
             <Post post={post}/>
           </div> 
         ))}

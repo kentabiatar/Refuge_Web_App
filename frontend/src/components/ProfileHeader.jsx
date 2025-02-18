@@ -71,12 +71,6 @@ function ProfileHeader({user, isOwner, onSave}) {
 		},
 	});
 
-	const getConnectionStatus = useMemo(() => {
-		if (isConnected) return "connected";
-		if (!isConnected) return "not_connected";
-		return connectionStatus?.data?.status;
-	}, [isConnected, connectionStatus]);
-
     const numberOfPosts = user?.posts?.length
     const numberOfConnections = user?.connections?.length
 
@@ -160,15 +154,15 @@ function ProfileHeader({user, isOwner, onSave}) {
     };
 
   return (
-    <div className='bg-base-100 rounded-lg p-4 shadow mb-4 border-b-[3px] border-r-[3px] border-secondary'>
+    <div className='bg-base-100 rounded-lg p-4 shadow mb-4 border-b-[3px] border-r-[3px] border-secondary min-w-80'>
     <div className='p-4'>
         <img src="/banner.jpg" alt="Banner" className="w-full h-56 object-cover object-right-top" />
-        <div className='flex gap-4'>
+        <div className='flex flex-col items-center gap-4 lg:flex-row lg:items-start'>
             <div className="relative">
                 <img
                     src={editedData.profileImage || user.profileImage || "/defaultProfile.png"}
                     alt={user.name}
-                    className="size-36 rounded-full ml-20 mt-[-50px]"
+                    className="size-24 rounded-full mt-[-50px] mx-auto lg:size-36 lg:ml-20"
                 />
                 {isEditing && (
                     <label className="absolute -top-10 right-0 bg-primary p-2 rounded-full shadow cursor-pointer">
@@ -189,13 +183,13 @@ function ProfileHeader({user, isOwner, onSave}) {
                         <>
                             <input
                                 type='text'
-                                value={editedData.name ?? user.name}
+                                placeholder={`name: ${user.name}`}
                                 onChange={(e) => setEditedData({ ...editedData, name: e.target.value })}
                                 className='w-52 text-3xl font-semibold text-neutral-600 font-playfair bg-primary border-secondary'
-                            />
+                                />
                             <input
                                 type='text'
-                                value={editedData.username ?? user.username}
+                                placeholder={`username: ${user.username}`}
                                 onChange={(e) => setEditedData({ ...editedData, username: e.target.value })}
                                 className='w-24 text-sm font-semibold text-neutral-600 font-playfair border-secondary bg-primary'
                             />
@@ -210,7 +204,7 @@ function ProfileHeader({user, isOwner, onSave}) {
                 {isEditing ? (
                     <input
                         type='text'
-                        value={editedData.bio ?? user.bio}
+                        placeholder={`bio: ${user.bio}`}
                         onChange={(e) => setEditedData({ ...editedData, bio: e.target.value })}
                         className='w-full text-sm font-semibold text-neutral-600 font-playfair border-secondary bg-primary'
                     />

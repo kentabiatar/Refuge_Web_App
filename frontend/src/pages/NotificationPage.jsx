@@ -118,7 +118,7 @@ function NotificationPage() {
         <Sidebar user={ authUser } />
       </div>
       <div className='col-span-1 lg:col-span-3 order-first lg:order-none'>
-          <div className='p-4 bg-base-100 rounded-lg shadow space-y-2 border-b-[3px] border-r-[3px] border-secondary'>
+          <div className='p-4 bg-base-100 rounded-lg shadow space-y-2 border-b-[3px] border-r-[3px] border-secondary min-w-80'>
                 {getNotifications?.data?.map(notification =>(
                     <div key={notification._id} className={`flex border-secondary justify-between rounded-lg p-4 ${notification.seen ? "border-[1px]" : "border-2"}`}>
                         <div className='flex gap-4'>

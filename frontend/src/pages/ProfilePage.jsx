@@ -47,7 +47,7 @@ function ProfilePage() {
   return (
     <div>
         <ProfileHeader user={user} isOwner={isOwner} onSave={handleSave}/>
-        <div className='bg-base-100 rounded-lg p-7 shadow mb-4 border-b-[3px] border-r-[3px] border-secondary'>
+        <div className='bg-base-100 rounded-lg p-7 shadow mb-4 border-b-[3px] border-r-[3px] border-secondary min-w-80'>
             <h1 className='text-xl font-semibold text-neutral-600 font-playfair'>
                 {user.name}'s Posts
             </h1>

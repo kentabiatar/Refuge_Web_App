@@ -68,7 +68,7 @@ function PostCreation({user}) {
 
 
   return (
-    <div className='bg-base-100 rounded-lg p-4 shadow mb-4 border-b-[3px] border-r-[3px] border-secondary'>
+    <div className='bg-base-100 rounded-lg p-4 shadow mb-4 border-b-[3px] border-r-[3px] border-secondary min-w-80'>
         <div className='flex space-x-3'>
             <img src={user.profileImage || "/defaultProfile.png"} alt={user.name} className='size-10 rounded-full' />
             <textarea value = {content} onChange={(e) => setContent(e.target.value)} className="w-full textarea textarea-bordered border-secondary hover:bg-gray-100 transition-colors duration-200" placeholder="Whats on your mind?"></textarea>

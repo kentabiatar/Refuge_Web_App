@@ -41,7 +41,7 @@ function Navbar() {
   const unseenConnectionReqCount = connectionReq?.data.filter(connection => connection.status === "pending").length
 
   return (
-    <div className="navbar bg-base-100 border-b-[3px] border-secondary">
+    <div className="navbar bg-base-100 border-b-[3px] border-secondary min-w-80">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -50,21 +50,26 @@ function Navbar() {
               className="h-5 w-5"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M4 6h16M4 12h8m-8 6h16" />
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
           </div>
-          <ul
-            tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow">
-            <li><Link to={"/notifications"}>Notifications</Link></li>
-            <li><Link to={"/connections"}>Connections</Link></li>
-            <li><Link>Me</Link></li>
-          </ul>
+
+          <div className="dropdown-content bg-base-100 rounded-box z-[1] mt-3 ml-3 w-52 p-2 shadow border-b-[3px] border-r-[3px] border-secondary">
+            {authUser ? (
+              <ul className="menu menu-sm text-neutral-600 font-playfair">
+                <li><Link to={"/notifications"}>Notifications</Link></li>
+                <li><Link to={"/connections"}>Connections</Link></li>
+                <li><Link to={`/profile/${authUser.username}`}>Me</Link></li>
+              </ul>
+            ) : (
+              <ul className="menu menu-sm text-neutral-600 font-playfair">
+                <li><Link to={"/signup"}>Sign Up</Link></li>
+                <li><Link to={"/login"}>Login</Link></li>
+              </ul>
+            )}
+          </div>
         </div>
         <Link to={"/"} className="btn btn-ghost text-3xl text-secondary font-playball">Refuge</Link>
       </div>
@@ -93,7 +98,7 @@ function Navbar() {
               </div>
               <p className='text-xs font-bold scale-90'>Connections</p>
             </Link>
-            <Link className='flex flex-col justify-center items-center relative'>
+            <Link to={`/profile/${authUser.username}`} className='flex flex-col justify-center items-center relative'>
               <div className="relative">
                 <HiOutlineUser className='text-xl'/>
               </div>
