@@ -2,7 +2,7 @@
   "name": "fullstackweb",
   "version": "1.0.0",
   "type": "module",
-  "main": "backend/server.js",
+  "main": "server.js",
   "scripts": {
     "dev": "nodemon backend/server.js",
     "start": "node backend/server.js"
