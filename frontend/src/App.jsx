@@ -12,20 +12,23 @@ import { useQuery } from '@tanstack/react-query'
 import { axiosClient } from './lib/axios.js'
 function App() {
 
-  const {data: authUser, isLoading} = useQuery({
+  const { data: authUser, isLoading } = useQuery({
     queryKey: ['authUser'],
-    queryFn: async() => {
+    queryFn: async () => {
       try {
-        const res = await axiosClient.get('/auth/me')
-        return res.data
+        const res = await axiosClient.get('/auth/me');
+        return res.data;
       } catch (error) {
-        if(error.response && error.response.status === 401){
-          return null
+        if (error.response && error.response.status === 401) {
+          return null; // Unauthorized user
         }
-        // toast.error(error.response.data.msg || "something went wrong")
+        return null; // Return null instead of throwing an error
       }
-    }
-  })
+    },
+    retry: false, // Prevent unnecessary retries when backend is down
+    staleTime: 1000 * 60 * 5, // Cache the result for 5 minutes
+  });
+  
 
   if(isLoading){
     return null
