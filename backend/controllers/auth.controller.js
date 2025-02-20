@@ -41,11 +41,17 @@ export const signup = async (req, res) => {
 
         const token = jwt.sign({ userid: newUser._id }, process.env.JWT_SECRET, {expiresIn: "3d"});
 
+        // res.cookie("jwt-fullstack1", token, {
+        //     httpOnly:true, //prevent XSS attack
+        //     maxAge: 3 * 24 * 60 * 60 * 1000, //3 days
+        //     sameSite:"strict", //prevent CSRF attack
+        //     secure: process.env.NODE_ENV === "production" //prevents man-in-the-middle attack
+        // })
         res.cookie("jwt-fullstack1", token, {
             httpOnly:true, //prevent XSS attack
             maxAge: 3 * 24 * 60 * 60 * 1000, //3 days
-            sameSite:"strict", //prevent CSRF attack
-            secure: process.env.NODE_ENV === "production" //prevents man-in-the-middle attack
+            sameSite:"None", //prevent CSRF attack
+            secure: true, //prevents man-in-the-middle attack
         })
 
         res.status(201).json({msg: "Signup successful", user: newUser});
@@ -77,11 +83,17 @@ export const login = async (req, res) => {
 
         const token = jwt.sign({ userid: user._id }, process.env.JWT_SECRET, {expiresIn: "3d"});
 
+        // res.cookie("jwt-fullstack1", token, {
+        //     httpOnly:true, //prevent XSS attack
+        //     maxAge: 3 * 24 * 60 * 60 * 1000, //3 days
+        //     sameSite:"strict", //prevent CSRF attack
+        //     secure: process.env.NODE_ENV === "production" //prevents man-in-the-middle attack
+        // })
         res.cookie("jwt-fullstack1", token, {
             httpOnly:true, //prevent XSS attack
             maxAge: 3 * 24 * 60 * 60 * 1000, //3 days
-            sameSite:"strict", //prevent CSRF attack
-            secure: process.env.NODE_ENV === "production" //prevents man-in-the-middle attack
+            sameSite:"None", //prevent CSRF attack
+            secure: true, //prevents man-in-the-middle attack
         })
 
         res.status(200).json({msg: "Login successful", user: user});
