@@ -1,5 +1,5 @@
 # Refuge - https://refuge-swart.vercel.app/
-
+NOTE: web app not yet compatible with SAFARI
 ## Overview
 
 Refuge is a web application designed for Christians to ask and answer questions about life, faith, and biblical teachings. Inspired by the Stack Overflow template, Refuge fosters a community where users can seek guidance rooted in scripture.
